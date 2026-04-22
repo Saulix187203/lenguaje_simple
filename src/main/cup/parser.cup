@@ -1,0 +1,38 @@
+package com.sv;
+import java_cup.runtime.*;
+
+class Parser;
+
+//simbolos terminales
+terminal Integer INT;
+terminal Float DECI;
+terminal String STR;
+terminal String VAR;
+terminal ASSIGN;  // simbolo igual =
+
+//simbolos no terminales
+non terminal Object data;
+non terminal Object var_list;
+non terminal Object var_assign;
+
+start with data;
+
+data ::= var_list:vl
+    {: RESULT = vl; :}
+    ;
+
+var_list ::= /* empty */
+    {: RESULT = null; :}
+    | var_list:vl var_assign:va
+    {: RESULT = va; :}
+    ;
+
+var_assign ::= VAR:var ASSIGN INT:val
+    {: RESULT = var + " = " + val; :}
+    | VAR:var ASSIGN DECI:val
+    {: RESULT = var + " = " + val; :}
+    | VAR:var ASSIGN STR:val
+    {: RESULT = var + " = " + val; :}
+    ;
+
+
