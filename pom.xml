@@ -137,7 +137,7 @@
                 <archive>
                     <manifest>
                     <mainClass>
-          com.sv.App
+                      com.sv.App
                     </mainClass>
                     </manifest>
                 </archive>

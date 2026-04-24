@@ -2,6 +2,7 @@ package com.sv;
 
 import picocli.CommandLine;
 
+import java.io.StringReader;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
 import static picocli.CommandLine.*;
@@ -13,16 +14,34 @@ public class App implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Bienvenido al programa de ejemplo. Escribe 'salir' para terminar.");
-        String input = "";
+        System.out.println("Bienvenido al programa de análisis léxico y sintáctico. Escribe 'salir' para terminar.");
+
+        String input;
         do {
+            System.out.print("> ");
             input = scanner.nextLine();
-            Parser parser = new Parser(new Lexer(new java.io.StringReader(input)));
+
             if (input.equals("salir")) {
+                System.out.println("¡Hasta luego!");
                 break;
             }
 
-        }while (true);
+            if (input.trim().isEmpty()) {
+                System.out.println("✗ Entrada vacía. Por favor ingresa una expresión válida.");
+                continue;
+            }
+
+            try {
+                Parser parser = new Parser(new Lexer(new StringReader(input)));
+                Object result = parser.parse();
+                System.out.println("✓ Entrada aceptada: " + result);
+            } catch (Exception e) {
+                System.out.println("✗ Entrada no aceptada. Error: " + e.getMessage());
+            }
+
+        } while (true);
+
+        scanner.close();
         return 0;
     }
 
@@ -30,6 +49,4 @@ public class App implements Callable<Integer> {
         int excode = new CommandLine(new App()).execute(args);
         System.exit(excode);
     }
-
-
 }
